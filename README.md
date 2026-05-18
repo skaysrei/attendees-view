@@ -10,7 +10,7 @@ Built on **TanStack Start**: data fetching happens server-side, list manipulatio
 
 - Node **v26.1.0**
 
-## Setup
+## Setup and Test
 
 ```bash
 npm install
