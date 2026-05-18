@@ -64,7 +64,8 @@ export function AttendeesList({ attendees }: AttendeesListProps) {
             />
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium truncate">
-                {attendee.fursonaName} {attendee.isFursuiter && <Badge label="Fursuiter" />}
+                {attendee.fursonaName}{' '}
+                {attendee.isFursuiter && <Badge label="Fursuiter" />}
               </p>
               <div className="flex gap-1 flex-wrap mt-1">
                 <Badge label={attendee.ticketKind} />

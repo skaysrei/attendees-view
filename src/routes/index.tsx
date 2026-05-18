@@ -11,7 +11,7 @@ function App() {
   const attendees = Route.useLoaderData()
 
   return (
-    <main className="page-wrap px-4 pb-8 pt-14">
+    <main className="page-wrap px-4 pb-4 pt-4">
       <section>
         <AttendeesList attendees={attendees} />
       </section>
