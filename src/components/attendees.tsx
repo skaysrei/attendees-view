@@ -56,7 +56,7 @@ export function AttendeesList({ attendees }: AttendeesListProps) {
         return (
           <li
             key={attendee.id}
-            className="flex items-center gap-3.5 px-1.5 py-1.5 rounded-lg border border-border bg-white hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-3.5 px-1.5 py-1.5 rounded-lg border border-border transition-colors border-[var(--line)] bg-[var(--header-bg)]"
           >
             <Avatar
               url={attendee.profilePictureUrl}
@@ -65,10 +65,10 @@ export function AttendeesList({ attendees }: AttendeesListProps) {
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium truncate">
                 {attendee.fursonaName}{' '}
-                {attendee.isFursuiter && <Badge label="Fursuiter" />}
+                {attendee.isFursuiter && <SuiterBadge label="Fursuiter" />}
               </p>
               <div className="flex gap-1 flex-wrap mt-1">
-                <Badge label={attendee.ticketKind} />
+                <GeneralBadge label={attendee.ticketKind} />
               </div>
             </div>
           </li>
@@ -78,7 +78,15 @@ export function AttendeesList({ attendees }: AttendeesListProps) {
   )
 }
 
-function Badge({ label }: { label: string }) {
+function SuiterBadge({ label }: { label: string }) {
+  return (
+    <span className="text-xs px-2 py-0.5 rounded-xs font-bold border-[var(--line)] bg-[var(--header-bg)]">
+      {label}
+    </span>
+  )
+}
+
+function GeneralBadge({ label }: { label: string }) {
   return (
     <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 font-medium">
       {label}
