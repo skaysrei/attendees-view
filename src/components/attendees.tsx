@@ -51,10 +51,17 @@ function Avatar({ url, name }: { url: string; name: string }) {
 
 export function AttendeesList({ attendees }: AttendeesListProps) {
   const [search, setSearch] = useState('')
+  const [suitersOnly, setSuitersOnly] = useState(false)
+  const [checkinCompleted, setCheckinCompleted] = useState(false)
 
-  const filtered = attendees.filter((a) =>
-    a.fursonaName.toLowerCase().includes(search.toLowerCase()),
-  )
+  const filtered = attendees.filter((a) => {
+    const matchesSearch = a.fursonaName
+      .toLowerCase()
+      .includes(search.toLowerCase())
+    const matchesSuiter = suitersOnly ? a.isFursuiter : true
+    const matchesCheckin = checkinCompleted ? a.checkInCompleted : true
+    return matchesSearch && matchesSuiter && matchesCheckin
+  })
 
   return (
     <div>
@@ -65,6 +72,26 @@ export function AttendeesList({ attendees }: AttendeesListProps) {
         onChange={(e) => setSearch(e.target.value)}
         className="w-full rounded-lg border px-3 py-2 text-sm"
       />
+      <button
+        onClick={() => setSuitersOnly((prev) => !prev)}
+        className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
+          suitersOnly
+            ? 'bg-pink-100 text-pink-800'
+            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+        }`}
+      >
+        🐾 Fursuiters only
+      </button>
+      <button
+        onClick={() => setCheckinCompleted((prev) => !prev)}
+        className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
+          checkinCompleted
+            ? 'bg-pink-100 text-pink-800'
+            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+        }`}
+      >
+        🏨 Checkin completed
+      </button>
       <ul className="flex flex-col gap-0.5">
         {filtered.map((attendee) => {
           return (
