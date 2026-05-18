@@ -81,7 +81,6 @@ export function AttendeesList({ attendees }: AttendeesListProps) {
   return (
     <div>
       <div className="flex items-center">
-        {' '}
         <input
           type="text"
           placeholder="Search attendees..."
@@ -134,15 +133,14 @@ export function AttendeesList({ attendees }: AttendeesListProps) {
             >
               <Avatar
                 url={attendee.profilePictureUrl}
-                name={getInitials(attendee.fursonaName)}
+                name={attendee.fursonaName}
               />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  {' '}
                   <p className="text-sm font-medium truncate">
                     {attendee.fursonaName}
                   </p>
-                  <p className="">
+                  <p>
                     {attendee.isFursuiter && <SuiterBadge label="Fursuiter" />}
                   </p>
                 </div>
