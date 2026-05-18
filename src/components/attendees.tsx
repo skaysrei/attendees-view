@@ -1,8 +1,13 @@
-import type { Attendee } from '../server/attendees'
+import type { Attendee, AttendeeKind } from '../server/attendees'
 import { useState } from 'react'
 
 interface AttendeesListProps {
   attendees: Attendee[]
+}
+
+interface KindFilterProps {
+  selected: AttendeeKind[]
+  onChange: (kinds: AttendeeKind[]) => void
 }
 
 const colorMap: Record<number, { bg: string; text: string }> = {
@@ -20,9 +25,15 @@ function getColor(id: string) {
   return colorMap[id.charCodeAt(0) % 4]
 }
 
-interface AttendeesListProps {
-  attendees: Attendee[]
-}
+const KINDS: AttendeeKind[] = [
+  'attendee',
+  'staff',
+  'dealer',
+  'bar',
+  'security',
+  'wildcard',
+  'av/it',
+]
 
 function Avatar({ url, name }: { url: string; name: string }) {
   const [imgFailed, setImgFailed] = useState(false)
@@ -53,6 +64,13 @@ export function AttendeesList({ attendees }: AttendeesListProps) {
   const [search, setSearch] = useState('')
   const [suitersOnly, setSuitersOnly] = useState(false)
   const [checkinCompleted, setCheckinCompleted] = useState(false)
+  const [selectedKinds, setSelectedKinds] = useState<AttendeeKind[]>([])
+
+  function toggle(kind: AttendeeKind) {
+    selectedKinds.includes(kind)
+      ? setSelectedKinds(selectedKinds.filter((k) => k !== kind))
+      : setSelectedKinds([...selectedKinds, kind])
+  }
 
   const filtered = attendees.filter((a) => {
     const matchesSearch = a.fursonaName
@@ -60,38 +78,58 @@ export function AttendeesList({ attendees }: AttendeesListProps) {
       .includes(search.toLowerCase())
     const matchesSuiter = suitersOnly ? a.isFursuiter : true
     const matchesCheckin = checkinCompleted ? a.checkInCompleted : true
-    return matchesSearch && matchesSuiter && matchesCheckin
+    const matchesKind =
+      selectedKinds.length === 0 || selectedKinds.includes(a.kind)
+    return matchesSearch && matchesSuiter && matchesCheckin && matchesKind
   })
 
   return (
     <div>
-      <input
-        type="text"
-        placeholder="Search attendees..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="w-full rounded-lg border px-3 py-2 text-sm"
-      />
-      <button
-        onClick={() => setSuitersOnly((prev) => !prev)}
-        className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
-          suitersOnly
-            ? 'bg-pink-100 text-pink-800'
-            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-        }`}
-      >
-        🐾 Fursuiters only
-      </button>
-      <button
-        onClick={() => setCheckinCompleted((prev) => !prev)}
-        className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
-          checkinCompleted
-            ? 'bg-pink-100 text-pink-800'
-            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-        }`}
-      >
-        🏨 Checkin completed
-      </button>
+      <div className="flex items-center">
+        {' '}
+        <input
+          type="text"
+          placeholder="Search attendees..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full rounded-lg border px-3 py-2 text-sm"
+        />
+      </div>
+      <div className="flex flex-wrap gap-1.5">
+        <button
+          onClick={() => setSuitersOnly((prev) => !prev)}
+          className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
+            suitersOnly
+              ? 'bg-pink-100 text-pink-800'
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+          }`}
+        >
+          🐾 Suiter
+        </button>
+        <button
+          onClick={() => setCheckinCompleted((prev) => !prev)}
+          className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
+            checkinCompleted
+              ? 'bg-pink-100 text-pink-800'
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+          }`}
+        >
+          🏨 Checked-in
+        </button>
+        {KINDS.map((kind) => (
+          <button
+            key={kind}
+            onClick={() => toggle(kind)}
+            className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
+              selectedKinds.includes(kind)
+                ? 'bg-indigo-600 text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300'
+            }`}
+          >
+            {kind}
+          </button>
+        ))}
+      </div>
       <ul className="flex flex-col gap-0.5">
         {filtered.map((attendee) => {
           return (
@@ -133,5 +171,31 @@ function GeneralBadge({ label }: { label: string }) {
     <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 font-medium">
       {label}
     </span>
+  )
+}
+
+export function KindFilter({ selected, onChange }: KindFilterProps) {
+  function toggle(kind: AttendeeKind) {
+    selected.includes(kind)
+      ? onChange(selected.filter((k) => k !== kind))
+      : onChange([...selected, kind])
+  }
+
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {KINDS.map((kind) => (
+        <button
+          key={kind}
+          onClick={() => toggle(kind)}
+          className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
+            selected.includes(kind)
+              ? 'bg-indigo-600 text-white'
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300'
+          }`}
+        >
+          {kind}
+        </button>
+      ))}
+    </div>
   )
 }

@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 
-type TicketKind = 'base' | 'early' | ''
-type AttendeeKind =
+export type TicketKind = 'base' | 'early' | ''
+export type AttendeeKind =
   | 'bar'
   | 'security'
   | 'wildcard'
