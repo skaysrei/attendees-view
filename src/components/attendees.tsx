@@ -5,11 +5,6 @@ interface AttendeesListProps {
   attendees: Attendee[]
 }
 
-interface KindFilterProps {
-  selected: AttendeeKind[]
-  onChange: (kinds: AttendeeKind[]) => void
-}
-
 const colorMap: Record<number, { bg: string; text: string }> = {
   0: { bg: '#EEEDFE', text: '#3C3489' },
   1: { bg: '#E1F5EE', text: '#085041' },
