@@ -87,10 +87,10 @@ export function AttendeesList({ attendees }: AttendeesListProps) {
           placeholder="Search attendees..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-lg border px-3 py-2 text-sm"
+          className="w-full rounded-lg border px-3 py-2 text-sm  border-[var(--line)] bg-[var(--inset-glint)]"
         />
       </div>
-      <div className="flex flex-wrap gap-1.5">
+      <div className="flex flex-wrap gap-1.5 pt-2">
         <button
           onClick={() => setSuitersOnly((prev) => !prev)}
           className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
@@ -125,24 +125,33 @@ export function AttendeesList({ attendees }: AttendeesListProps) {
           </button>
         ))}
       </div>
-      <ul className="flex flex-col gap-0.5">
+      <ul className="flex flex-col gap-0.5 pt-2">
         {filtered.map((attendee) => {
           return (
             <li
               key={attendee.id}
-              className="flex items-center gap-3.5 px-1.5 py-1.5 rounded-lg border border-border transition-colors border-[var(--line)] bg-[var(--header-bg)]"
+              className="flex items-center gap-3.5 px-1.5 py-1.5 text-xl rounded-lg border border-border transition-colors border-[var(--line)] bg-[var(--header-bg)]"
             >
               <Avatar
                 url={attendee.profilePictureUrl}
                 name={getInitials(attendee.fursonaName)}
               />
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">
-                  {attendee.fursonaName}{' '}
-                  {attendee.isFursuiter && <SuiterBadge label="Fursuiter" />}
-                </p>
+                <div className="flex items-center gap-2">
+                  {' '}
+                  <p className="text-sm font-medium truncate">
+                    {attendee.fursonaName}
+                  </p>
+                  <p className="">
+                    {attendee.isFursuiter && <SuiterBadge label="Fursuiter" />}
+                  </p>
+                </div>
                 <div className="flex gap-1 flex-wrap mt-1">
-                  <GeneralBadge label={attendee.ticketKind} />
+                  {attendee.ticketKind == 'early' && (
+                    <span className="text-xs py-0.5 text-green-400 font-extrabold">
+                      + Early
+                    </span>
+                  )}
                 </div>
               </div>
             </li>
@@ -155,15 +164,7 @@ export function AttendeesList({ attendees }: AttendeesListProps) {
 
 function SuiterBadge({ label }: { label: string }) {
   return (
-    <span className="text-xs px-2 py-0.5 rounded-xs font-bold border-[var(--line)] bg-[var(--header-bg)]">
-      {label}
-    </span>
-  )
-}
-
-function GeneralBadge({ label }: { label: string }) {
-  return (
-    <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 font-medium">
+    <span className="flex justify-center text-xs px-2 py-1 rounded-sm font-bold border-1 border-[var(--line)] bg-[var(--header-bg)]">
       {label}
     </span>
   )
