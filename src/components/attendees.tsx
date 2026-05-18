@@ -173,29 +173,3 @@ function GeneralBadge({ label }: { label: string }) {
     </span>
   )
 }
-
-export function KindFilter({ selected, onChange }: KindFilterProps) {
-  function toggle(kind: AttendeeKind) {
-    selected.includes(kind)
-      ? onChange(selected.filter((k) => k !== kind))
-      : onChange([...selected, kind])
-  }
-
-  return (
-    <div className="flex flex-wrap gap-1.5">
-      {KINDS.map((kind) => (
-        <button
-          key={kind}
-          onClick={() => toggle(kind)}
-          className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
-            selected.includes(kind)
-              ? 'bg-indigo-600 text-white'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300'
-          }`}
-        >
-          {kind}
-        </button>
-      ))}
-    </div>
-  )
-}
